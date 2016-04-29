@@ -1,0 +1,74 @@
+/**
+ * Jordan Marx
+ * 
+ * Class for increasing the amplitude of a sound file. The user is prompted to enter the value.
+ * If the user enters in a value between 0 and 99, the volume of the sound file will be decreased. 
+ * If the user enters a value greater than 100, the volume will be increased.
+ */
+
+import java.awt.Color;
+import java.io.File;
+
+ 
+public class AmplitudeIncrease
+{
+  
+  public static void main (String[] args) 
+  {
+
+    // Open a sound file
+    String filename1 = FileChooser.pickAFile ();
+    System.out.println (filename1);
+    
+   
+    // Create a new sound file
+    Sound sound1;
+    sound1 = new Sound (filename1);
+    
+    System.out.println ("Sampling Rate: " + sound1.getSamplingRate());
+    System.out.println ("Number of Samples: " + sound1.getLength() );
+    
+    // Prompt the user for a number to increase the amplitude
+    int value;
+    value = SimpleInput.getIntNumber ("Please enter a value to increase the amplitude"); 
+    
+    // Display the value entered by the user 
+    System.out.println ("The user entered: " + value); 
+    
+    // Call a method to modify the sound
+    modifySound (sound1, value);
+    
+    // Play the sound file
+    sound1.play();
+
+  }
+  
+ // Method for increasing the amplitude
+ public static void modifySound (Sound s, int numVal)
+ {
+   SoundSample[] ssArr;
+   
+   ssArr = s.getSamples();
+   
+   System.out.println ("Length of the array: " + ssArr.length );
+   int i;
+   for ( i = 0 ; i < ssArr.length ; ++i)
+   {
+     int amplitude = ssArr[i].getValue();
+     amplitude = (amplitude * numVal)/100;
+     
+     // Determine if the amplitude goes out of range
+     if (amplitude > 32767)
+     {
+       amplitude = 32767;
+     }
+     else if (amplitude < -32768)
+     {
+       amplitude = -32768;
+     }
+     
+     ssArr[i].setValue(amplitude);
+   }
+ }
+  
+}
